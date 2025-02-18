@@ -22,13 +22,15 @@ def load_icon(icon_name):
             _icon_cache[icon_name] = QIcon()  # Retorna um ícone vazio em caso de falha
     return _icon_cache[icon_name]
 
-# Funções específicas para carregar ícones usados frequentemente
+# Funções específicas para carregar ícones usados frequentemente #8AB4F7 #FFFFFF
 def load_icons():
     return {
         "initdataprocessing": load_icon("initdataprocessing.png"),    
         "initdatacollection": load_icon("initdatacollection.png"),    
         "initexploration": load_icon("initexploration.png"),    
-        "initreport": load_icon("initreport.png"),    
+        "data-collection": load_icon("data-collection.png"),
+        "data-collection_blue": load_icon("data-collection_blue.png"),        
+        "initreport": load_icon("initreport.png"),   
 
         "api_azul": load_icon("API_azul.png"),    
         "statistics_azul": load_icon("statistics_azul.png"),

@@ -6,7 +6,7 @@ from utils.add_button import add_button
 from assets.styles.styles import table_view_stylesheet, title_view_stylesheet
 import pandas as pd
 
-class DataAcquisitionView(QMainWindow):
+class DataCollectionView(QMainWindow):
     # Sinais para comunicação com o controlador
     messageAlert = pyqtSignal()
     apiCheck = pyqtSignal()

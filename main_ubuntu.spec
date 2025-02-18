@@ -6,10 +6,11 @@ from pathlib import Path
 from PyInstaller.utils.hooks import collect_all
 
 # Defina o caminho do diretório base diretamente
-BASE_DIR = Path("/home/samsung/Projetos/360JAN2025/src")
+BASE_DIR = Path("/home/samsung/Projetos/ccimar360/default_ui/src")
 DATABASE_DIR = BASE_DIR / "database"
 ASSETS_DIR = BASE_DIR / "assets"
-ICON_PATH = ASSETS_DIR / "brasil.png"
+ICONS_DIR = ASSETS_DIR / "icons"
+ICON_PATH = ICONS_DIR / "brasil.png"
 
 # Adicione o caminho do diretório base ao sys.path
 sys.path.insert(0, str(BASE_DIR))
@@ -39,7 +40,7 @@ exe = EXE(
     a.scripts,
     [],
     exclude_binaries=True,
-    name='licitacao360',
+    name='ccimar360',
     debug=False,
     bootloader_ignore_signals=False,
     strip=False,
@@ -58,5 +59,5 @@ coll = COLLECT(
     strip=False,
     upx=True,
     upx_exclude=[],
-    name='licitacao360',
+    name='ccimar360',
 )

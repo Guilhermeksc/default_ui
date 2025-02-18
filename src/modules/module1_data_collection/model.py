@@ -6,7 +6,7 @@ from PyQt6.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 import sqlite3  
 from datetime import datetime
 
-class DataAcquisitionModel(QObject):
+class DataCollectionModel(QObject):
     def __init__(self, database_path, parent=None):
         super().__init__(parent)
         self.database_manager = DatabaseManager(database_path)
@@ -28,22 +28,22 @@ class DataAcquisitionModel(QObject):
             self.adjust_table_structure()  # Ajusta a estrutura da tabela, se necessário
 
     def adjust_table_structure(self):
-        """Verifica e cria a tabela 'controle_planejamento' se não existir."""
+        """Verifica e cria a tabela 'data_collection' se não existir."""
         query = QSqlQuery(self.db)
-        if not query.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='controle_planejamento'"):
+        if not query.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='data_collection'"):
             print("Erro ao verificar existência da tabela:", query.lastError().text())
         if not query.next():
-            print("Tabela 'controle_planejamento' não existe. Criando tabela...")
+            print("Tabela 'data_collection' não existe. Criando tabela...")
             self.create_table_if_not_exists()
         else:
             pass
-            # print("Tabela 'controle_planejamento' existe. Verificando estrutura da coluna...")
+            # print("Tabela 'data_collection' existe. Verificando estrutura da coluna...")
 
     def create_table_if_not_exists(self):
-        """Cria a tabela 'controle_planejamento' com a estrutura definida, caso ainda não exista."""
+        """Cria a tabela 'data_collection' com a estrutura definida, caso ainda não exista."""
         query = QSqlQuery(self.db)
         if not query.exec("""
-            CREATE TABLE IF NOT EXISTS controle_planejamento (
+            CREATE TABLE IF NOT EXISTS data_collection (
                 status TEXT, dias TEXT, prorrogavel TEXT, custeio TEXT, numero_contrato TEXT,
                 tipo TEXT, id TEXT PRIMARY KEY, nome_fornecedor TEXT, objeto TEXT, valor_global TEXT,
                 codigo_uasg TEXT, processo_nup TEXT, cnpj_cpf_idgener TEXT, natureza_continuada TEXT, orgao_contratante_resumido TEXT, 
@@ -54,9 +54,9 @@ class DataAcquisitionModel(QObject):
                                
             )
         """):
-            print("Falha ao criar a tabela 'controle_planejamento':", query.lastError().text())
+            print("Falha ao criar a tabela 'data_collection':", query.lastError().text())
         else:
-            print("Tabela 'controle_planejamento' criada com sucesso.")
+            print("Tabela 'data_collection' criada com sucesso.")
 
     def setup_model(self, table_name, editable=False):
         """Configura o modelo SQL para a tabela especificada."""
@@ -83,7 +83,7 @@ class DataAcquisitionModel(QObject):
             data['status'] = 'Planejamento'
             
         upsert_sql = '''
-        INSERT INTO controle_planejamento (
+        INSERT INTO data_collection (
             status, dias, prorrogavel, custeio, numero_contrato, 
             tipo, id, nome_fornecedor, objeto, valor_global, 
             codigo_uasg, processo_nup, cnpj_cpf_idgener, natureza_continuada, orgao_contratante_resumido, 
@@ -133,7 +133,7 @@ class DataAcquisitionModel(QObject):
 
         except sqlite3.OperationalError as e:
             if "no such table" in str(e):
-                QMessageBox.warning(None, "Erro", "A tabela 'controle_planejamento' não existe. Por favor, crie a tabela primeiro.")
+                QMessageBox.warning(None, "Erro", "A tabela 'data_collection' não existe. Por favor, crie a tabela primeiro.")
                 return
             else:
                 QMessageBox.warning(None, "Erro", f"Ocorreu um erro ao tentar salvar os dados: {str(e)}")

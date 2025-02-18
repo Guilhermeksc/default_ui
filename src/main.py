@@ -64,6 +64,7 @@ class MainWindow(QMainWindow):
         # Definindo os botões do menu e seus contextos
         self.menu_buttons = [
             ("init", "init_hover", "Sobre o Projeto", self.show_inicio),
+            ("data-collection_blue", "data-collection", "Data Collection", self.show_data_collection),
             ("contrato_blue", "contrato", "Planejamento", self.show_planejamento),
             ("data_blue", "data", "CCIMAR-16", self.show_ccimar16),
             ("config", "config_hover", "Configurações", self.show_config),
@@ -170,6 +171,19 @@ class MainWindow(QMainWindow):
         self.active_button = button 
 
     # ====== MÓDULOS ======
+    def show_data_collection(self):
+        self.clear_content_area()        
+        # Instancia o modelo com o caminho do banco de dados
+        self.data_collection_model = DataCollectionModel(DATA_COLLECTION_PATH)        
+        # Configura o modelo SQL
+        sql_model = self.data_collection_model.setup_model("data_collection", editable=True)        
+        # Cria a View e passa o modelo SQL e o caminho do banco de dados
+        self.data_collection_view = DataCollectionView(self.icons, sql_model, self.data_collection_model.database_manager.db_path)
+        # Cria o controlador e passa o widget e o modelo
+        self.data_collection_controller = DataCollectionController(self.icons, self.data_collection_view, self.data_collection_model)
+        # Adiciona o widget de Dispensa Eletrônica na área de conteúdo
+        self.content_layout.addWidget(self.data_collection_view)
+        self.set_active_button(self.buttons["data-collection_blue"])
 
     def show_planejamento(self):
         self.clear_content_area()        

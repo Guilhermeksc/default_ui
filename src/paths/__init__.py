@@ -4,6 +4,7 @@
 from .base_path import *
 from .config_path import *
 from .planejamento  import *
+from .module1_data_collection import *
 from .module5_ccimar16 import *
 
 # Definindo __all__ para controle explícito do que será exportado
@@ -15,8 +16,11 @@ __all__ = [
     # planejamento
     "DATA_PLANEJAMENTO_PATH", "TEMPLATE_PLANEJAMENTO_DIR",
     
+    # module1_data_collection
+    "DATA_COLLECTION_DIR", "DATA_COLLECTION_PATH",
+    
     # module5_ccimar16
-    "CCIMAR16_DIR", "DATA_CCIMAR16_PATH",
+    "CCIMAR16_DIR", "DATA_CCIMAR16_PATH", "TEMPLATE_TEST_PATH",
 
     # config_path
     "PRE_DEFINICOES_JSON", "ORGANIZACOES_FILE", "AGENTES_RESPONSAVEIS_FILE", "PDF_DIR",

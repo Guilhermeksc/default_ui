@@ -18,7 +18,7 @@ class InicioWidget(QWidget):
         self.setSizePolicy(QSizePolicy.Policy.Expanding, QSizePolicy.Policy.Expanding)
 
         # Título do projeto
-        self.title_label = QLabel("Centro de Controle Interno da Marinha (CCIMAR)")
+        self.title_label = QLabel("    CCIMAR-360")
         self.title_label.setStyleSheet(title_view_stylesheet())
 
         # Sinopse do projeto

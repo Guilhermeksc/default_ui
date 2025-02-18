@@ -1,10 +1,11 @@
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
-from utils.search_bar import setup_search_bar, MultiColumnFilterProxyModel
-from utils.add_button import add_button
-from assets.styles.styles import table_view_stylesheet, title_view_stylesheet
-import pandas as pd
+import os
+import subprocess
+from docx import Document
+from paths import TEMPLATE_TEST_PATH
+
 
 class CCIMAR16View(QMainWindow):
     # Sinais para comunicação com o controlador
@@ -46,7 +47,7 @@ class CCIMAR16View(QMainWindow):
                 color: white;
                 font-size: 16px; 
                 text-align: center;
-                padding: 15px;
+                padding: 5px;
             }
             QPushButton:hover {
                 background-color: #3A3B47; 
@@ -67,6 +68,7 @@ class CCIMAR16View(QMainWindow):
             ("Gerar Nota com Cálculo Total", self.show_gerar_notas_widget),
             ("Notas Monitoradas", self.show_gerar_notas_widget),
             ("AUDCONT - Notas Vencidas", self.show_gerar_notas_widget),
+            ("Teste", self.show_teste_widget),
         ]
 
         self.config_menu_buttons = []
@@ -158,3 +160,92 @@ class CCIMAR16View(QMainWindow):
 
         # Adiciona o scroll area ao layout principal
         self.content_layout.addWidget(scroll_area)
+
+    def show_teste_widget(self):
+        self.clear_content()
+        # Widget principal para o conteúdo da scroll area
+        teste_widget = QWidget()
+        layout = QVBoxLayout(teste_widget)
+        # Título
+        title = QLabel("Teste")
+        title.setStyleSheet("font-size: 20px; font-weight: bold; color: #4E648B")
+        layout.addWidget(title)
+
+        # Campos de entrada
+        self.pasta_input = QLineEdit()
+        self.pasta_input.setPlaceholderText("Nome da Pasta")
+        layout.addWidget(self.pasta_input)
+        
+        self.setor_input = QLineEdit()
+        self.setor_input.setPlaceholderText("Setor Responsável")
+        layout.addWidget(self.setor_input)
+        
+        self.observacao_input = QLineEdit()
+        self.observacao_input.setPlaceholderText("Observação")
+        layout.addWidget(self.observacao_input)
+
+        # Botões
+        self.btn_criar_pasta = QPushButton("Criar Pasta")
+        self.btn_criar_pasta.clicked.connect(self.criar_pasta)
+        layout.addWidget(self.btn_criar_pasta)
+        
+        self.btn_criar_pasta_docx = QPushButton("Criar Pasta e Arquivos DOCX")
+        self.btn_criar_pasta_docx.clicked.connect(self.criar_pasta_e_docx)
+        layout.addWidget(self.btn_criar_pasta_docx)
+        
+        self.btn_criar_pasta_pdf = QPushButton("Criar Pasta e Arquivos PDF")
+        self.btn_criar_pasta_pdf.clicked.connect(self.criar_pasta_e_pdf)
+        layout.addWidget(self.btn_criar_pasta_pdf)
+
+        # Adiciona o scroll area ao layout principal
+        self.content_layout.addWidget(teste_widget)
+
+
+    def criar_pasta(self):
+        nome_pasta = self.pasta_input.text().strip()
+        if nome_pasta:
+            caminho_pasta = os.path.join(os.path.expanduser("~/Desktop"), nome_pasta)
+            os.makedirs(caminho_pasta, exist_ok=True)
+            try:
+                if os.name == "nt":  # Windows
+                    os.startfile(caminho_pasta)
+                elif os.name == "posix":  # Linux/Mac
+                    subprocess.run(["xdg-open", caminho_pasta])
+            except Exception as e:
+                QMessageBox.critical(self, "Erro", f"Erro ao abrir a pasta: {e}")
+
+    def criar_pasta_e_docx(self):
+        self.criar_pasta()
+        nome_pasta = self.pasta_input.text().strip()
+        setor_responsavel = self.setor_input.text().strip()
+        observacao = self.observacao_input.text().strip()
+        caminho_pasta = os.path.join(os.path.expanduser("~/Desktop"), nome_pasta)
+        
+        if nome_pasta:
+            try:
+                doc = Document(TEMPLATE_TEST_PATH)
+                for var in doc.paragraphs:
+                    if "{{setor_responsavel}}" in var.text:
+                        var.text = var.text.replace("{{setor_responsavel}}", setor_responsavel)
+                    if "{{observacao}}" in var.text:
+                        var.text = var.text.replace("{{observacao}}", observacao)
+
+                doc_path = os.path.join(caminho_pasta, "documento.docx")
+                doc.save(doc_path)
+            except Exception as e:
+                QMessageBox.critical(self, "Erro", f"Erro ao criar o arquivo DOCX: {e}")
+
+    def criar_pasta_e_pdf(self):
+        self.criar_pasta_e_docx()  # Criar DOCX primeiro
+        nome_pasta = self.pasta_input.text().strip()
+        caminho_pasta = os.path.join(os.path.expanduser("~/Desktop"), nome_pasta)
+        
+        if nome_pasta:
+            docx_path = os.path.join(caminho_pasta, "documento.docx")
+            pdf_path = os.path.join(caminho_pasta, "documento.pdf")
+            
+            # Convert DOCX to PDF (necessário o LibreOffice ou outra solução instalada)
+            try:
+                os.system(f'libreoffice --headless --convert-to pdf "{docx_path}" --outdir "{caminho_pasta}"')
+            except Exception as e:
+                QMessageBox.critical(self, "Erro", f"Erro ao converter para PDF: {e}")
