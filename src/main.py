@@ -65,7 +65,7 @@ class MainWindow(QMainWindow):
         self.menu_buttons = [
             ("init", "init_hover", "Sobre o Projeto", self.show_inicio),
             ("data-collection_blue", "data-collection", "Data Collection", self.show_data_collection),
-            ("contrato_blue", "contrato", "Planejamento", self.show_planejamento),
+            ("data-processing_blue", "data-processing", "Data Processing", self.show_data_processing),
             ("data_blue", "data", "CCIMAR-16", self.show_ccimar16),
             ("config", "config_hover", "Configurações", self.show_config),
         ]
@@ -185,7 +185,7 @@ class MainWindow(QMainWindow):
         self.content_layout.addWidget(self.data_collection_view)
         self.set_active_button(self.buttons["data-collection_blue"])
 
-    def show_planejamento(self):
+    def show_data_processing(self):
         self.clear_content_area()        
         # Instancia o modelo com o caminho do banco de dados
         self.planejamento_model = PlanejamentoModel(DATA_PLANEJAMENTO_PATH)        
@@ -197,7 +197,7 @@ class MainWindow(QMainWindow):
         self.planejamento_controller = PlanejamentoController(self.icons, self.planejamento_view, self.planejamento_model)
         # Adiciona o widget de Dispensa Eletrônica na área de conteúdo
         self.content_layout.addWidget(self.planejamento_view)
-        self.set_active_button(self.buttons["contrato_blue"])
+        self.set_active_button(self.buttons["data-processing_blue"])
 
     def show_ccimar16(self):
         self.clear_content_area()        
