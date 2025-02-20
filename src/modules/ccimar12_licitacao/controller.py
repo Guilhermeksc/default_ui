@@ -2,10 +2,10 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 import pandas as pd
 from paths import CONTROLE_DADOS
-from modules.module2_pre_processamento.api.comprasnet_api import ConsultaAPIWindow
+from modules.ccimar12_licitacao.api.comprasnet_api import ConsultaAPIWindow
 import sqlite3
 
-class PlanejamentoController(QObject): 
+class CCIMAR12Controller(QObject): 
     def __init__(self, icons, view, model):
         super().__init__()
         self.icons = icons

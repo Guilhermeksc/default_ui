@@ -23,5 +23,8 @@ ASSETS_DIR = BASE_DIR / "assets"
 TEMPLATE_DIR = ASSETS_DIR / "templates"
 STYLE_PATH = ASSETS_DIR / "style.css" 
 ICONS_DIR = ASSETS_DIR / "icons"
+IMAGE_DIR = ASSETS_DIR / "image"
+CCIMAR360_PATH = IMAGE_DIR / "CCIMAR-360.png"
+ICONS_MENU_DIR = ICONS_DIR / "menu"
 
 

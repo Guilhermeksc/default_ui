@@ -6,7 +6,7 @@ from PyQt6.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
 import sqlite3  
 from datetime import datetime
 
-class PlanejamentoModel(QObject):
+class CCIMAR12Model(QObject):
     def __init__(self, database_path, parent=None):
         super().__init__(parent)
         self.database_manager = DatabaseManager(database_path)

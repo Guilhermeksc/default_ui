@@ -36,7 +36,7 @@ class PlanejamentoView(QMainWindow):
         self.setCentralWidget(self.main_widget)
         self.main_layout = QVBoxLayout(self.main_widget)
         title_layout = QHBoxLayout()
-        label_contratos = QLabel("Pré-processamento e Limpeza", self)
+        label_contratos = QLabel("CCIMAR-11 Planejamento", self)
         label_contratos.setStyleSheet(title_view_stylesheet())
         title_layout.addWidget(label_contratos)
         title_layout.addStretch()

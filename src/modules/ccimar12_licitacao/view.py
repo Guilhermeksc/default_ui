@@ -6,7 +6,7 @@ from utils.add_button import add_button
 from assets.styles.styles import table_view_stylesheet, title_view_stylesheet
 import pandas as pd
 
-class PlanejamentoView(QMainWindow):
+class CCIMAR12View(QMainWindow):
     # Sinais para comunicação com o controlador
     messageAlert = pyqtSignal()
     apiCheck = pyqtSignal()
@@ -36,7 +36,7 @@ class PlanejamentoView(QMainWindow):
         self.setCentralWidget(self.main_widget)
         self.main_layout = QVBoxLayout(self.main_widget)
         title_layout = QHBoxLayout()
-        label_contratos = QLabel("Planejamento", self)
+        label_contratos = QLabel("CCIMAR-12 - Licitações", self)
         label_contratos.setStyleSheet(title_view_stylesheet())
         title_layout.addWidget(label_contratos)
         title_layout.addStretch()

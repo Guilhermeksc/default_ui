@@ -64,8 +64,13 @@ class MainWindow(QMainWindow):
         # Definindo os botões do menu e seus contextos
         self.menu_buttons = [
             ("init", "init_hover", "Sobre o Projeto", self.show_inicio),
-            ("data-collection_blue", "data-collection", "Data Collection", self.show_data_collection),
-            ("data-processing_blue", "data-processing", "Data Processing", self.show_data_processing),
+            ("number-10-b", "number-10", "CCIMAR-10", self.show_ccimar10),
+            ("number-11-b", "number-11", "CCIMAR-11 - Planejamento", self.show_ccimar11),
+            ("number-12-b", "number-12", "CCIMAR-12 - Licitação", self.show_ccimar12),
+            ("number-13-b", "number-13", "CCIMAR-13", self.show_ccimar11),
+            ("number-14-b", "number-14", "CCIMAR-14", self.show_ccimar11),
+            ("number-15-b", "number-15", "CCIMAR-15", self.show_ccimar11),
+            ("number-16-b", "number-16", "CCIMAR-16", self.show_ccimar11),
             ("data_blue", "data", "CCIMAR-16", self.show_ccimar16),
             ("config", "config_hover", "Configurações", self.show_config),
         ]
@@ -83,6 +88,7 @@ class MainWindow(QMainWindow):
         self.menu_layout.addSpacerItem(QSpacerItem(20, 20, QSizePolicy.Policy.Minimum, QSizePolicy.Policy.Expanding))
 
         # Adiciona o ícone 360-degrees.png na parte inferior
+
         icon_label = QLabel(self)
         icon_label.setPixmap(self.icons["360-degrees"].pixmap(40, 40))  # Define o ícone com tamanho 50x50
         icon_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
@@ -92,6 +98,7 @@ class MainWindow(QMainWindow):
         self.menu_widget = QWidget()
         self.menu_widget.setLayout(self.menu_layout)
         self.menu_widget.setStyleSheet("background-color: #13141F;")
+
         self.central_layout.addWidget(self.menu_widget)
             
     def eventFilter(self, obj, event):
@@ -171,7 +178,7 @@ class MainWindow(QMainWindow):
         self.active_button = button 
 
     # ====== MÓDULOS ======
-    def show_data_collection(self):
+    def show_ccimar10(self):
         self.clear_content_area()        
         # Instancia o modelo com o caminho do banco de dados
         self.data_collection_model = DataCollectionModel(DATA_COLLECTION_PATH)        
@@ -183,9 +190,9 @@ class MainWindow(QMainWindow):
         self.data_collection_controller = DataCollectionController(self.icons, self.data_collection_view, self.data_collection_model)
         # Adiciona o widget de Dispensa Eletrônica na área de conteúdo
         self.content_layout.addWidget(self.data_collection_view)
-        self.set_active_button(self.buttons["data-collection_blue"])
+        self.set_active_button(self.buttons["number-10-b"])
 
-    def show_data_processing(self):
+    def show_ccimar11(self):
         self.clear_content_area()        
         # Instancia o modelo com o caminho do banco de dados
         self.planejamento_model = PlanejamentoModel(DATA_PLANEJAMENTO_PATH)        
@@ -197,7 +204,21 @@ class MainWindow(QMainWindow):
         self.planejamento_controller = PlanejamentoController(self.icons, self.planejamento_view, self.planejamento_model)
         # Adiciona o widget de Dispensa Eletrônica na área de conteúdo
         self.content_layout.addWidget(self.planejamento_view)
-        self.set_active_button(self.buttons["data-processing_blue"])
+        self.set_active_button(self.buttons["number-11-b"])
+
+    def show_ccimar12(self):
+        self.clear_content_area()        
+        # Instancia o modelo com o caminho do banco de dados
+        self.CCIMAR12_model = CCIMAR12Model(DATA_PLANEJAMENTO_PATH)        
+        # Configura o modelo SQL
+        sql_model = self.CCIMAR12_model.setup_model("controle_planejamento", editable=True)        
+        # Cria a View e passa o modelo SQL e o caminho do banco de dados
+        self.CCIMAR12_view = CCIMAR12View(self.icons, sql_model, self.CCIMAR12_model.database_manager.db_path)
+        # Cria o controlador e passa o widget e o modelo
+        self.CCIMAR12_controller = CCIMAR12Controller(self.icons, self.CCIMAR12_view, self.CCIMAR12_model)
+        # Adiciona o widget de Dispensa Eletrônica na área de conteúdo
+        self.content_layout.addWidget(self.CCIMAR12_view)
+        self.set_active_button(self.buttons["number-12-b"])
 
     def show_ccimar16(self):
         self.clear_content_area()        
@@ -244,19 +265,32 @@ class MainWindow(QMainWindow):
     # ====== ÁREA DE CONTEÚDO ======
 
     def setup_content_area(self):
-        """Configura a área principal para exibição do conteúdo."""
+        """Configura a área principal para exibição do conteúdo sem afetar os elementos internos."""
         self.content_layout = QVBoxLayout()
         self.content_layout.setSpacing(0)
         self.content_layout.setContentsMargins(0, 0, 0, 0)
         self.content_layout.setAlignment(Qt.AlignmentFlag.AlignTop)
+
         self.content_image_label = QLabel(self.central_widget)
         self.content_image_label.hide()
         self.content_layout.addWidget(self.content_image_label)
 
-        self.content_widget = QWidget()
+        # Usar QFrame para melhor controle de estilo
+        self.content_widget = QFrame()
+        self.content_widget.setObjectName("contentWidget")
         self.content_widget.setLayout(self.content_layout)
         self.content_widget.setMinimumSize(1050, 700)
+        self.content_widget.setFrameStyle(QFrame.Shape.NoFrame)  # Remove qualquer borda padrão
+
+        # Aplicar estilo apenas no background do content_widget
+        self.content_widget.setStyleSheet("""
+            QFrame#contentWidget {
+                background-color: #454A63;
+            }
+        """)
+
         self.central_layout.addWidget(self.content_widget)
+
 
     def clear_content_area(self, keep_image_label=False):
         """Remove todos os widgets da área de conteúdo, exceto a imagem opcional."""

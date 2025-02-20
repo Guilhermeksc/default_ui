@@ -1,7 +1,7 @@
 # config/icon_loader.py
 from pathlib import Path
 from PyQt6.QtGui import QIcon
-from paths import ICONS_DIR
+from paths import ICONS_DIR, ICONS_MENU_DIR
 import logging
 
 # Configuração de logging
@@ -14,17 +14,38 @@ _icon_cache = {}
 def load_icon(icon_name):
     """Carrega e armazena em cache os ícones como QIcon. Verifica se o arquivo existe antes de carregar."""
     if icon_name not in _icon_cache:
+        # Primeiro, tenta carregar de ICONS_DIR
         icon_path = ICONS_DIR / icon_name
+        if not icon_path.exists():
+            # Se não encontrar, tenta em ICONS_MENU_DIR
+            icon_path = ICONS_MENU_DIR / icon_name
+
         if icon_path.exists():
             _icon_cache[icon_name] = QIcon(str(icon_path))
         else:
-            logger.warning(f"Ícone '{icon_name}' não encontrado em {icon_path}")
+            logger.warning(f"Ícone '{icon_name}' não encontrado em {ICONS_DIR} nem em {ICONS_MENU_DIR}")
             _icon_cache[icon_name] = QIcon()  # Retorna um ícone vazio em caso de falha
+
     return _icon_cache[icon_name]
 
 # Funções específicas para carregar ícones usados frequentemente #8AB4F7 #FFFFFF
 def load_icons():
     return {
+        "number-10": load_icon("number-10.png"),
+        "number-10-b": load_icon("number-10-b.png"),
+        "number-11": load_icon("number-11.png"),
+        "number-11-b": load_icon("number-11-b.png"),
+        "number-12": load_icon("number-12.png"),
+        "number-12-b": load_icon("number-12-b.png"),
+        "number-13": load_icon("number-13.png"),
+        "number-13-b": load_icon("number-13-b.png"),
+        "number-14": load_icon("number-14.png"),
+        "number-14-b": load_icon("number-14-b.png"),
+        "number-15": load_icon("number-15.png"),
+        "number-15-b": load_icon("number-15-b.png"),
+        "number-16": load_icon("number-16.png"),
+        "number-16-b": load_icon("number-16-b.png"),
+        
         "initdataprocessing": load_icon("initdataprocessing.png"),    
         "initdatacollection": load_icon("initdatacollection.png"),    
         "initexploration": load_icon("initexploration.png"),    

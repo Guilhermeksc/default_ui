@@ -2,7 +2,7 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 import pandas as pd
 from paths import CONTROLE_DADOS
-from modules.module2_pre_processamento.api.comprasnet_api import ConsultaAPIWindow
+from modules.ccimar11_planejamento.api.comprasnet_api import ConsultaAPIWindow
 import sqlite3
 
 class PlanejamentoController(QObject): 
