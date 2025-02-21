@@ -2,7 +2,6 @@ from PyQt6.QtWidgets import *
 from PyQt6.QtCore import *
 import pandas as pd
 from paths import CONTROLE_DADOS
-from modules.ccimar12_licitacao.api.comprasnet_api import ConsultaAPIWindow
 import sqlite3
 
 class CCIMAR12Controller(QObject): 
@@ -18,7 +17,8 @@ class CCIMAR12Controller(QObject):
 
     def setup_connections(self):
         # Conecta os sinais da view aos métodos do controlador
-        self.view.apiCheck.connect(self.abrir_consulta_api)
+        # self.view.apiCheck.connect(self.abrir_consulta_api)
+        pass
 
     def handle_api_data(self, data_informacoes_lista, resultados_completos):
         # Estrutura os dados da API para salvar no banco de dados
@@ -141,10 +141,6 @@ class CCIMAR12Controller(QObject):
             QMessageBox.information(self.view, "Sucesso", "Tabela excluída com sucesso.")
             self.view.refresh_model()
             # self.model.select()  # Atualiza o modelo para refletir a exclusão
-
-    def abrir_consulta_api(self):
-        dialog = ConsultaAPIWindow(self.icons, self.model_add, self.view)  # Agora passando model e view
-        dialog.exec()
 
 def show_warning_if_view_exists(view, title, message):
     if view is not None:

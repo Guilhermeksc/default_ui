@@ -1,15 +1,15 @@
 from PyQt6.QtWidgets import QTreeView, QAbstractItemView
-from PyQt6.QtGui import QStandardItemModel, QStandardItem
-
-from PyQt6.QtCore import Qt
+from PyQt6.QtGui import QStandardItemModel, QStandardItem, QIcon
+from PyQt6.QtCore import Qt, QSize
 
 
 class TreeMenu(QTreeView):
-    def __init__(self, owner, parent=None):
+    def __init__(self, icons, owner, parent=None):
         """
         :param owner: Objeto que contém os métodos de callback.
         """
         super().__init__(parent)
+        self.icons = icons
         self.owner = owner
         self.setHeaderHidden(True)
         self.setCursor(Qt.CursorShape.PointingHandCursor)
@@ -43,14 +43,21 @@ class TreeMenu(QTreeView):
     def populate_tree(self):
         def add_item(parent, text, callback):
             item = QStandardItem(text)
-            item.setData(callback, Qt.ItemDataRole.UserRole)
+            item.setData(lambda: callback(self.owner), Qt.ItemDataRole.UserRole)
             parent.appendRow(item)
 
-        # Itens pais
-        item_relatorios   = QStandardItem("Relatórios")
-        item_oficios      = QStandardItem("Ofícios")
-        item_webscrapping = QStandardItem("Webscrapping")
-        item_api          = QStandardItem("API")
+        # Define icon size
+        icon_size = 24  # Adjust if needed
+
+        # Parent items with icons
+        item_relatorios   = QStandardItem(self.icons.get("statistics_azul", QIcon()), "Relatórios")
+        item_oficios      = QStandardItem(self.icons.get("mensagem", QIcon()), "Ofícios")
+        item_webscrapping = QStandardItem(self.icons.get("magnifying-glass", QIcon()), "Webscrapping")
+        item_api          = QStandardItem(self.icons.get("api", QIcon()), "API")
+
+        # Set icon size for parent items
+        for item in [item_relatorios, item_oficios, item_webscrapping, item_api]:
+            item.setSizeHint(QSize(icon_size + 10, icon_size + 10))
 
         # Itens filhos com callbacks
         add_item(item_oficios, "Ofício do CCIMAR-20", self.owner.show_oficio_ccimar20_widget)
@@ -69,6 +76,7 @@ class TreeMenu(QTreeView):
         self.model.appendRow(item_oficios)
         self.model.appendRow(item_webscrapping)
         self.model.appendRow(item_api)
+
 
     def handle_item_click(self, index):
         item = self.model.itemFromIndex(index)

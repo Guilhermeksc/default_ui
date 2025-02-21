@@ -31,30 +31,41 @@ class InicioWidget(QWidget):
 
         # Sinopse do projeto
         self.synopsis_label = QLabel(
-            "CCIMAR360 é um projeto em desenvolvimento para automatizar processos repetitivos relacionados "
-            "as atividades de auditoria do Centro de Controle Interno da Marinha (CCIMAR). Com um foco na otimização e eficiência, o projeto oferece ferramentas "
-            "para manipulação de documentos PDF, DOCX e XLSX, geração de relatórios, e automação de tarefas via RPA. "
-            "O objetivo principal é melhorar a qualidade de vida no trabalho, minimizando erros e reduzindo a quantidade "
-            "de cliques necessários para completar uma tarefa."
+            "O CCIMAR360 é um aplicativo desenvolvido para aprimorar e automatizar processos relacionados às atividades "
+            "de auditoria do Centro de Controle Interno da Marinha (CCIMAR). \n\n"
+            "A solução permite a extração, manipulação e análise de documentos em diversos formatos, facilitando a "
+            "produção de relatórios e o monitoramento da aplicação de recursos públicos. \n\n"
+            "Além disso, incorpora automações baseadas em Robotic Process Automation (RPA) para aprimorar a identificação de"
+            "impropriedades, otimizar o fluxo de trabalho e reforçar os controles internos administrativos, garantindo maior"
+            "eficiência e transparência nas atividades de auditoria."
         )
+
         self.synopsis_label.setAlignment(Qt.AlignmentFlag.AlignJustify)
         self.synopsis_label.setWordWrap(True)
-        self.synopsis_label.setStyleSheet("font-size: 16px; padding: 10px;")
+        self.synopsis_label.setStyleSheet("font-size: 16px; padding: 10px; color: #BEE3DB;")
 
         # Adiciona os widgets ao layout
         self.layout.addWidget(self.synopsis_label)
 
-
         # Contato
-        self.contact_label = QLabel(
-            'Para mais informações, entre em contato pelo e-mail: <a href="mailto:siqueira.campos@marinha.mil.br">siqueira.campos@marinha.mil.br</a>'
+        self.contact_label = QLabel(self)
+
+        self.contact_label.setText(
+            'Para suporte, entre em contato pelo e-mail: '
+            '<a href="mailto:siqueira.campos@marinha.mil.br" style="color:#FFF; text-decoration:none;">'
+            'siqueira.campos@marinha.mil.br</a>'
         )
         self.contact_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
         self.contact_label.setOpenExternalLinks(True)
-        self.contact_label.setStyleSheet("font-size: 16px; padding: 10px;")
+        self.contact_label.setStyleSheet("""
+            font-size: 16px;
+            padding: 10px;
+            color: #BEE3DB;  /* Cor do texto geral */
+        """)
 
-        # Adiciona o contato ao final
+        # Adiciona o contato ao layout
         self.layout.addWidget(self.contact_label)
+
 
         # Adiciona um espaço flexível para empurrar o contato para o final
         self.layout.addStretch()

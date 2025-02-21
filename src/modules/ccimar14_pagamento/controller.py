@@ -4,20 +4,18 @@ import pandas as pd
 from paths import CONTROLE_DADOS
 import sqlite3
 
-class CCIMAR10Controller(QObject): 
+class CCIMAR14Controller(QObject): 
     def __init__(self, icons, view, model):
         super().__init__()
         self.icons = icons
         self.view = view
         self.edit_data_dialog = None
         self.model_add = model
-        self.model = model.setup_model("ccimar10_db")
+        self.model = model.setup_model("controle_planejamento")
         self.controle_om = CONTROLE_DADOS  # Atribui o caminho diretamente ao controle_om                
         self.setup_connections()
 
     def setup_connections(self):
-        # Conecta os sinais da view aos métodos do controlador
-        # self.view.apiCheck.connect(self.abrir_consulta_api)
         pass
 
     def handle_api_data(self, data_informacoes_lista, resultados_completos):

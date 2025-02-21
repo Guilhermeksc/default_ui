@@ -63,15 +63,15 @@ class MainWindow(QMainWindow):
 
         # Definindo os botões do menu e seus contextos
         self.menu_buttons = [
-            ("init", "init_hover", "Sobre o Projeto", self.show_inicio),
-            ("number-10-b", "number-10", "CCIMAR-10", self.show_ccimar10),
-            ("number-11-b", "number-11", "CCIMAR-11 - Planejamento", self.show_ccimar11),
-            ("number-12-b", "number-12", "CCIMAR-12 - Licitação", self.show_ccimar12),
-            ("number-13-b", "number-13", "CCIMAR-13", self.show_ccimar11),
-            ("number-14-b", "number-14", "CCIMAR-14", self.show_ccimar11),
-            ("number-15-b", "number-15", "CCIMAR-15", self.show_ccimar11),
-            ("number-16-b", "number-16", "CCIMAR-16", self.show_ccimar11),
-            ("data_blue", "data", "CCIMAR-16", self.show_ccimar16),
+            ("init", "init_hover", "Página Inicial", self.show_inicio),
+            ("number-10-b", "number-10", "Departamento de Auditoria Interna (CCIMAR-10)", self.show_ccimar10),
+            ("number-11-b", "number-11", "Divisão de Planejamento e Monitoramento (CCIMAR-11)", self.show_ccimar11),
+            ("number-12-b", "number-12", "Divisão de Licitações (CCIMAR-12)", self.show_ccimar12),
+            ("number-13-b", "number-13", "Divisão de Execução (CCIMAR-13)", self.show_ccimar13),
+            ("number-14-b", "number-14", "Divisão de Pagamento (CCIMAR-14)", self.show_ccimar14),
+            ("number-15-b", "number-15", "Divisão de Material (CCIMAR-15)", self.show_ccimar15),
+            ("number-16-b", "number-16", "Divisão de Ciência de Dados Aplicada à Auditoria (CCIMAR-16)", self.show_ccimar16),
+            ("data_blue", "data", "Utilidades", self.show_ccimar_utils),
             ("config", "config_hover", "Configurações", self.show_config),
         ]
 
@@ -181,58 +181,103 @@ class MainWindow(QMainWindow):
     def show_ccimar10(self):
         self.clear_content_area()        
         # Instancia o modelo com o caminho do banco de dados
-        self.data_collection_model = DataCollectionModel(DATA_COLLECTION_PATH)        
+        self.ccimar10_model = CCIMAR10Model(CCIMAR10_PATH)        
         # Configura o modelo SQL
-        sql_model = self.data_collection_model.setup_model("data_collection", editable=True)        
+        sql_model = self.ccimar10_model.setup_model("ccimar10", editable=True)        
         # Cria a View e passa o modelo SQL e o caminho do banco de dados
-        self.data_collection_view = DataCollectionView(self.icons, sql_model, self.data_collection_model.database_manager.db_path)
+        self.ccimar10_view = CCIMAR10View(self.icons, sql_model, self.ccimar10_model.database_manager.db_path)
         # Cria o controlador e passa o widget e o modelo
-        self.data_collection_controller = DataCollectionController(self.icons, self.data_collection_view, self.data_collection_model)
+        self.ccimar10_controller = CCIMAR10Controller(self.icons, self.ccimar10_view, self.ccimar10_model)
         # Adiciona o widget de Dispensa Eletrônica na área de conteúdo
-        self.content_layout.addWidget(self.data_collection_view)
+        self.content_layout.addWidget(self.ccimar10_view)
         self.set_active_button(self.buttons["number-10-b"])
 
+    # def show_ccimar11(self):
+    #     self.clear_content_area()        
+    #     self.ccimar11_model = CCIMAR11Model(CCIMAR11_PATH)
+    #     sql_model = self.ccimar11_model.setup_model("ccimar11_db", editable=True)
+    #     self.ccimar11_view = CCIMAR11View(self.icons, sql_model, self.ccimar11_model.database_manager.db_path)
+    #     self.ccimar11_controller = CCIMAR11Controller(self.icons, self.ccimar11_view, self.ccimar11_model)
+    #     self.content_layout.addWidget(self.ccimar11_view)
+    #     self.set_active_button(self.buttons["number-11-b"])
+
     def show_ccimar11(self):
-        self.clear_content_area()        
-        # Instancia o modelo com o caminho do banco de dados
-        self.planejamento_model = PlanejamentoModel(DATA_PLANEJAMENTO_PATH)        
-        # Configura o modelo SQL
-        sql_model = self.planejamento_model.setup_model("controle_planejamento", editable=True)        
-        # Cria a View e passa o modelo SQL e o caminho do banco de dados
-        self.planejamento_view = PlanejamentoView(self.icons, sql_model, self.planejamento_model.database_manager.db_path)
-        # Cria o controlador e passa o widget e o modelo
-        self.planejamento_controller = PlanejamentoController(self.icons, self.planejamento_view, self.planejamento_model)
-        # Adiciona o widget de Dispensa Eletrônica na área de conteúdo
-        self.content_layout.addWidget(self.planejamento_view)
+        self.clear_content_area()
+        
+        print("Initializing CCIMAR11 Model...")  
+        self.ccimar11_model = CCIMAR11Model(CCIMAR11_PATH)
+        print("Model initialized successfully.")
+
+        sql_model = self.ccimar11_model.setup_model("ccimar11", editable=True)
+        print("SQL Model set up successfully.")
+
+        print(f"Database path: {self.ccimar11_model.database_manager.db_path}")
+
+        self.ccimar11_view = CCIMAR11View(self.icons, sql_model, self.ccimar11_model.database_manager.db_path)
+        print("CCIMAR11 View initialized.")
+
+        self.ccimar11_controller = CCIMAR11Controller(self.icons, self.ccimar11_view, self.ccimar11_model)
+        print("CCIMAR11 Controller initialized.")
+
+        self.content_layout.addWidget(self.ccimar11_view)
         self.set_active_button(self.buttons["number-11-b"])
+
+        print("CCIMAR11 module loaded successfully.")
+
 
     def show_ccimar12(self):
         self.clear_content_area()        
-        # Instancia o modelo com o caminho do banco de dados
-        self.CCIMAR12_model = CCIMAR12Model(DATA_PLANEJAMENTO_PATH)        
-        # Configura o modelo SQL
-        sql_model = self.CCIMAR12_model.setup_model("controle_planejamento", editable=True)        
-        # Cria a View e passa o modelo SQL e o caminho do banco de dados
-        self.CCIMAR12_view = CCIMAR12View(self.icons, sql_model, self.CCIMAR12_model.database_manager.db_path)
-        # Cria o controlador e passa o widget e o modelo
-        self.CCIMAR12_controller = CCIMAR12Controller(self.icons, self.CCIMAR12_view, self.CCIMAR12_model)
-        # Adiciona o widget de Dispensa Eletrônica na área de conteúdo
-        self.content_layout.addWidget(self.CCIMAR12_view)
+        self.ccimar12_model = CCIMAR12Model(CCIMAR12_PATH)
+        sql_model = self.ccimar12_model.setup_model("ccimar12", editable=True)
+        self.ccimar12_view = CCIMAR12View(self.icons, sql_model, self.ccimar12_model.database_manager.db_path)
+        self.ccimar12_controller = CCIMAR12Controller(self.icons, self.ccimar12_view, self.ccimar12_model)
+        self.content_layout.addWidget(self.ccimar12_view)
         self.set_active_button(self.buttons["number-12-b"])
 
+    def show_ccimar13(self):
+        self.clear_content_area()        
+        self.ccimar13_model = CCIMAR13Model(CCIMAR13_PATH)
+        sql_model = self.ccimar13_model.setup_model("ccimar13", editable=True)
+        self.ccimar13_view = CCIMAR13View(self.icons, sql_model, self.ccimar13_model.database_manager.db_path)
+        self.ccimar13_controller = CCIMAR13Controller(self.icons, self.ccimar13_view, self.ccimar13_model)
+        self.content_layout.addWidget(self.ccimar13_view)
+        self.set_active_button(self.buttons["number-13-b"])
+
+    def show_ccimar14(self):
+        self.clear_content_area()        
+        self.ccimar14_model = CCIMAR14Model(CCIMAR14_PATH)
+        sql_model = self.ccimar14_model.setup_model("ccimar14", editable=True)
+        self.ccimar14_view = CCIMAR14View(self.icons, sql_model, self.ccimar14_model.database_manager.db_path)
+        self.ccimar14_controller = CCIMAR14Controller(self.icons, self.ccimar14_view, self.ccimar14_model)
+        self.content_layout.addWidget(self.ccimar14_view)
+        self.set_active_button(self.buttons["number-14-b"])
+
+    def show_ccimar15(self):
+        self.clear_content_area()        
+        self.ccimar15_model = CCIMAR15Model(CCIMAR15_PATH)
+        sql_model = self.ccimar15_model.setup_model("ccimar15", editable=True)
+        self.ccimar15_view = CCIMAR15View(self.icons, sql_model, self.ccimar15_model.database_manager.db_path)
+        self.ccimar15_controller = CCIMAR15Controller(self.icons, self.ccimar15_view, self.ccimar15_model)
+        self.content_layout.addWidget(self.ccimar15_view)
+        self.set_active_button(self.buttons["number-15-b"])
+                                               
     def show_ccimar16(self):
         self.clear_content_area()        
-        # Instancia o modelo com o caminho do banco de dados
-        self.ccimar16_model = CCIMAR16Model(DATA_CCIMAR16_PATH)        
-        # Configura o modelo SQL
-        sql_model = self.ccimar16_model.setup_model("controle_ccimar16", editable=True)        
-        # Cria a View e passa o modelo SQL e o caminho do banco de dados
+        self.ccimar16_model = CCIMAR16Model(CCIMAR16_PATH)
+        sql_model = self.ccimar16_model.setup_model("ccimar16", editable=True)
         self.ccimar16_view = CCIMAR16View(self.icons, sql_model, self.ccimar16_model.database_manager.db_path)
-        # Cria o controlador e passa o widget e o modelo
         self.ccimar16_controller = CCIMAR16Controller(self.icons, self.ccimar16_view, self.ccimar16_model)
-        # Adiciona o widget de Dispensa Eletrônica na área de conteúdo
         self.content_layout.addWidget(self.ccimar16_view)
-        self.set_active_button(self.buttons["data_blue"])
+        self.set_active_button(self.buttons["number-16-b"])
+
+    def show_ccimar_utils(self):
+        self.clear_content_area()        
+        self.utils_model = UtilsModel(CCIMAR_UTIL_PATH)
+        sql_model = self.utils_model.setup_model("ccimar_utils", editable=True)
+        self.utils_view = UtilsView(self.icons, sql_model, self.utils_model.database_manager.db_path)
+        self.utils_controller = UtilsController(self.icons, self.utils_view, self.utils_model)
+        self.content_layout.addWidget(self.utils_view)
+        self.set_active_button(self.buttons["number-16-b"])
 
     def show_config(self):
         self.clear_content_area()
@@ -285,7 +330,7 @@ class MainWindow(QMainWindow):
         # Aplicar estilo apenas no background do content_widget
         self.content_widget.setStyleSheet("""
             QFrame#contentWidget {
-                background-color: #454A63;
+                background-color: #181928;
             }
         """)
 

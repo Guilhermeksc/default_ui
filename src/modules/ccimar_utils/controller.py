@@ -4,7 +4,7 @@ from PyQt6.QtGui import QPixmap, QImage
 import fitz  # PyMuPDF para manipular PDFs
 import os
 
-class CCIMAR16Controller(QObject): 
+class UtilsController(QObject): 
     def __init__(self, icons, view, model):
         super().__init__()
         self.icons = icons

@@ -7,7 +7,6 @@ if getattr(sys, 'frozen', False):  # Executável compilado
     BASE_DIR = Path(sys._MEIPASS) / "src"  # Diretório temporário + 'src'
 else:  # Ambiente de desenvolvimento
     BASE_DIR = Path(__file__).resolve().parent.parent
-    
   
 DATABASE_DIR = BASE_DIR / "database"    
 MODULES_DIR = BASE_DIR / "modules"

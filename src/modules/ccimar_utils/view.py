@@ -9,7 +9,7 @@ from .treeview_menu import TreeMenu
 from .draggable_view_pdf import DraggableGraphicsView
 from utils.add_button import add_button
 
-class CCIMAR16View(QMainWindow):
+class UtilsView(QMainWindow):
     # Sinais para comunicação com o controlador
     prev_page = pyqtSignal()
     next_page = pyqtSignal()
@@ -344,9 +344,9 @@ class CCIMAR16View(QMainWindow):
         self.setor_input.setPlaceholderText("Setor Responsável")
         layout.addWidget(self.setor_input)
         
-        self.observacao_input = QLineEdit()
-        self.observacao_input.setPlaceholderText("Observação")
-        layout.addWidget(self.observacao_input)
+        self.natalia_input = QLineEdit()
+        self.natalia_input.setPlaceholderText("natalia")
+        layout.addWidget(self.natalia_input)
 
         # Botões
         self.btn_criar_pasta = QPushButton("Criar Pasta")
@@ -382,7 +382,7 @@ class CCIMAR16View(QMainWindow):
         self.criar_pasta()
         nome_pasta = self.pasta_input.text().strip()
         setor_responsavel = self.setor_input.text().strip()
-        observacao = self.observacao_input.text().strip()
+        natalia = self.natalia_input.text().strip()
         caminho_pasta = os.path.join(os.path.expanduser("~/Desktop"), nome_pasta)
         
         if nome_pasta:
@@ -391,8 +391,8 @@ class CCIMAR16View(QMainWindow):
                 for var in doc.paragraphs:
                     if "{{setor_responsavel}}" in var.text:
                         var.text = var.text.replace("{{setor_responsavel}}", setor_responsavel)
-                    if "{{observacao}}" in var.text:
-                        var.text = var.text.replace("{{observacao}}", observacao)
+                    if "{{natalia}}" in var.text:
+                        var.text = var.text.replace("{{natalia}}", natalia)
 
                 doc_path = os.path.join(caminho_pasta, "documento.docx")
                 doc.save(doc_path)

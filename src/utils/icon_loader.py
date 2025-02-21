@@ -56,8 +56,12 @@ def load_icons():
         "initreport": load_icon("initreport.png"),   
         "click": load_icon("click.png"),   
 
+        "doc": load_icon("doc.png"),
+        "mail": load_icon("mail.png"),
+        "prioridade": load_icon("prioridade.png"),
         "api_azul": load_icon("API_azul.png"),    
         "statistics_azul": load_icon("statistics_azul.png"),
+        "statistics": load_icon("statistics.png"),
         "pdf": load_icon("pdf.png"),
         # "pdf_button": load_icon("pdf_button.png"),
         # "pdf_button_blue": load_icon("pdf_button_blue.png"),
