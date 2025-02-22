@@ -4,13 +4,9 @@ from PyQt6.QtWidgets import QTreeView, QAbstractItemView
 from PyQt6.QtGui import QStandardItemModel, QStandardItem
 from PyQt6.QtCore import Qt
 from .menu_callbacks import (  
-    show_nota_auditoria_teste1, show_nota_auditoria_teste2,
-    show_nota_auditoria_teste3,
-    show_oficio_ccimar20_widget, show_gerar_notas_widget,
-    show_relatorio_consultas_airflow_widget, show_relatorio_sgm_widget,
-    show_relatorio_ccimar11_widget, show_relatorio_cofamar_widget,
-    show_relatorio_calculo_total_widget, show_relatorio_notas_monitoradas_widget,
-    show_relatorio_audcont_widget, show_teste_widget
+    show_criterio1_execucao_licitacao, show_criterio2_pagamento,
+    show_criterio3_munic, show_criteriox_omps, show_criterio4_patrimonio,
+    show_oficio_ccimar20_widget, show_gerar_notas_widget
 )
 
 class TreeMenu(QTreeView):
@@ -54,40 +50,28 @@ class TreeMenu(QTreeView):
             parent.appendRow(item)
 
         # Parent items with icons
-        item_nota   = QStandardItem(self.icons["prioridade"], "Nota de Auditoria")
-        item_relatorio   = QStandardItem(self.icons["statistics"], "Relatórios")
-        item_mensagem      = QStandardItem(self.icons["mensagem"], "Mensagens")
-        item_email      = QStandardItem(self.icons["mail"], "E-mail")
-        item_oficio      = QStandardItem(self.icons["doc"], "Ofícios")
-        item_webscrapping = QStandardItem(self.icons["magnifying-glass"], "Webscrapping")
-        item_api          = QStandardItem(self.icons["api"], "API")
+        item_paint   = QStandardItem(self.icons["analytics"], "PAINT")
+        item_relatorio   = QStandardItem(self.icons["report"], "RAINT")
+        item_monitoramento   = QStandardItem(self.icons["statistics"], "Monitoramento")
 
         # Adding child items with their respective callbacks
-        add_item(item_nota, "NA - Teste1", show_nota_auditoria_teste1)
-        add_item(item_nota, "NA - Teste2", show_nota_auditoria_teste2)
-        add_item(item_nota, "NA - Teste3", show_nota_auditoria_teste3)
-        add_item(item_nota, "Teste1", show_teste_widget)
-        add_item(item_oficio, "Ofício do CCIMAR-20", show_oficio_ccimar20_widget)
-        add_item(item_api, "Gerar Notas", show_gerar_notas_widget)
-        add_item(item_relatorio, "Consultas do Airflow", show_relatorio_consultas_airflow_widget)
-        add_item(item_relatorio, "Relatório SGM", show_relatorio_sgm_widget)
-        add_item(item_relatorio, "Relatório CCIMAR-11", show_relatorio_ccimar11_widget)
-        add_item(item_relatorio, "Relatório COFAMAR", show_relatorio_cofamar_widget)
-        add_item(item_relatorio, "Gerar Nota com Cálculo Total", show_relatorio_calculo_total_widget)
-        add_item(item_relatorio, "Notas Monitoradas", show_relatorio_notas_monitoradas_widget)
-        add_item(item_relatorio, "AUDCONT - Notas Vencidas", show_relatorio_audcont_widget)
-        add_item(item_mensagem, "Teste", show_teste_widget)
-        add_item(item_email, "Teste", show_teste_widget)
-        add_item(item_webscrapping, "Teste", show_teste_widget)
+        add_item(item_paint, "Execução/Licitação", show_criterio1_execucao_licitacao)
+        add_item(item_paint, "Pagamento", show_criterio2_pagamento)
+        add_item(item_paint, "Municiamento", show_criterio3_munic)
+        add_item(item_paint, "Patrimônio", show_criterio4_patrimonio)
+        add_item(item_paint, "Última Auditoria", show_criterio3_munic)
+        add_item(item_paint, "Notas de Auditoria", show_criterio3_munic)
+        add_item(item_paint, "Foco Externo", show_criterio3_munic)
+        add_item(item_paint, "OC", show_criterio3_munic)
+        add_item(item_paint, "OMPS", show_criteriox_omps)
+        add_item(item_monitoramento, "Patrimônio", show_oficio_ccimar20_widget)
+        add_item(item_monitoramento, "Anos", show_gerar_notas_widget)
 
         # Add parent items to the model
-        self.model.appendRow(item_nota)
+        self.model.appendRow(item_paint)
         self.model.appendRow(item_relatorio)
-        self.model.appendRow(item_mensagem)
-        self.model.appendRow(item_email)
-        self.model.appendRow(item_oficio)
-        self.model.appendRow(item_webscrapping)
-        self.model.appendRow(item_api)
+        self.model.appendRow(item_monitoramento)
+
 
     def handle_item_click(self, index):
         """Handles item click events and executes the associated callback."""

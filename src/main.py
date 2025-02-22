@@ -192,15 +192,6 @@ class MainWindow(QMainWindow):
         self.content_layout.addWidget(self.ccimar10_view)
         self.set_active_button(self.buttons["number-10-b"])
 
-    # def show_ccimar11(self):
-    #     self.clear_content_area()        
-    #     self.ccimar11_model = CCIMAR11Model(CCIMAR11_PATH)
-    #     sql_model = self.ccimar11_model.setup_model("ccimar11_db", editable=True)
-    #     self.ccimar11_view = CCIMAR11View(self.icons, sql_model, self.ccimar11_model.database_manager.db_path)
-    #     self.ccimar11_controller = CCIMAR11Controller(self.icons, self.ccimar11_view, self.ccimar11_model)
-    #     self.content_layout.addWidget(self.ccimar11_view)
-    #     self.set_active_button(self.buttons["number-11-b"])
-
     def show_ccimar11(self):
         self.clear_content_area()
         
@@ -213,7 +204,7 @@ class MainWindow(QMainWindow):
 
         print(f"Database path: {self.ccimar11_model.database_manager.db_path}")
 
-        self.ccimar11_view = CCIMAR11View(self.icons, sql_model, self.ccimar11_model.database_manager.db_path)
+        self.ccimar11_view = CCIMAR11View(self.icons, sql_model, self.ccimar11_model)
         print("CCIMAR11 View initialized.")
 
         self.ccimar11_controller = CCIMAR11Controller(self.icons, self.ccimar11_view, self.ccimar11_model)

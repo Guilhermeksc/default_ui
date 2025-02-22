@@ -1,62 +1,36 @@
 from database.db_manager import DatabaseManager
+from .menu.database.insert_munic import insert_munic
+from .menu.database.insert_organizacao_militar import insert_organizacao_militar
+from .menu.database.insert_auditoria import insert_auditoria
+from .menu.database.insert_execucao_licitacao import insert_execucao_licitacao
+from .menu.database.insert_pagamento import insert_pagamento
+from .menu.database.insert_patrimonio import insert_patrimonio
 from PyQt6.QtWidgets import *
 from PyQt6.QtGui import *
 from PyQt6.QtCore import *
 from PyQt6.QtSql import QSqlDatabase, QSqlTableModel, QSqlQuery
-import sqlite3  
 from datetime import datetime
 
 class CCIMAR11Model(QObject):
     def __init__(self, database_path, parent=None):
         super().__init__(parent)
         self.database_manager = DatabaseManager(database_path)
-        self.db = None  # Adiciona um atributo para o banco de dados
-        self.model = None  # Atributo para o modelo SQL
-        self.init_database()  # Inicializa a conexão e a estrutura do banco de dados
+        self.db = None
+        self.model = None
+        self.init_database()
 
     def init_database(self):
-        """Inicializa a conexão com o banco de dados e ajusta a estrutura da tabela."""
+        """Inicializa a conexão com o banco de dados e ajusta a estrutura das tabelas."""
         if QSqlDatabase.contains("my_conn"):
             QSqlDatabase.removeDatabase("my_conn")
         self.db = QSqlDatabase.addDatabase('QSQLITE', "my_conn")
         self.db.setDatabaseName(str(self.database_manager.db_path))
-        
+
         if not self.db.open():
             print("Não foi possível abrir a conexão com o banco de dados.")
         else:
             print("Conexão com o banco de dados aberta com sucesso.")
-            self.adjust_table_structure()  # Ajusta a estrutura da tabela, se necessário
-
-    def adjust_table_structure(self):
-        """Verifica e cria a tabela 'ccimar11_db' se não existir."""
-        query = QSqlQuery(self.db)
-        if not query.exec("SELECT name FROM sqlite_master WHERE type='table' AND name='ccimar11_db'"):
-            print("Erro ao verificar existência da tabela:", query.lastError().text())
-        if not query.next():
-            print("Tabela 'ccimar11_db' não existe. Criando tabela...")
-            self.create_table_if_not_exists()
-        else:
-            pass
-            # print("Tabela 'ccimar11_db' existe. Verificando estrutura da coluna...")
-
-    def create_table_if_not_exists(self):
-        """Cria a tabela 'ccimar11_db' com a estrutura definida, caso ainda não exista."""
-        query = QSqlQuery(self.db)
-        if not query.exec("""
-            CREATE TABLE IF NOT EXISTS ccimar11_db (
-                status TEXT, dias TEXT, prorrogavel TEXT, custeio TEXT, numero_contrato TEXT,
-                tipo TEXT, id TEXT PRIMARY KEY, nome_fornecedor TEXT, objeto TEXT, valor_global TEXT,
-                codigo_uasg TEXT, processo_nup TEXT, cnpj_cpf_idgener TEXT, natureza_continuada TEXT, orgao_contratante_resumido TEXT, 
-                orgao_contratante TEXT, material_servico TEXT, link_pncp TEXT, vigencia_inicial TEXT, vigencia_final TEXT, 
-                termo_aditivo TEXT, atualizacao_comprasnet TEXT, instancia_governanca TEXT, comprasnet_contratos TEXT, licitacao_numero TEXT, 
-                data_assinatura TEXT, data_publicacao TEXT, categoria TEXT, subtipo TEXT, amparo_legal TEXT, 
-                modalidade TEXT, assinatura_contrato TEXT, situacao TEXT
-                               
-            )
-        """):
-            print("Falha ao criar a tabela 'ccimar11_db':", query.lastError().text())
-        else:
-            print("Tabela 'ccimar11_db' criada com sucesso.")
+            self.create_tables_if_not_exist()
 
     def setup_model(self, table_name, editable=False):
         """Configura o modelo SQL para a tabela especificada."""
@@ -69,74 +43,141 @@ class CCIMAR11Model(QObject):
         
         self.model.select()
         return self.model
+    
+    def create_tables_if_not_exist(self):
+        """Cria as tabelas com cod_siafi como PRIMARY KEY."""
+        query = QSqlQuery(self.db)
 
-    def get_data(self, table_name):
-        """Retorna todos os dados da tabela especificada."""
-        return self.database_manager.fetch_all(f"SELECT * FROM {table_name}")
+        tabelas = {
+            "organizacoes_militares": """
+                CREATE TABLE IF NOT EXISTS organizacoes_militares (
+                    cod_siafi INTEGER PRIMARY KEY,
+                    sigla_om TEXT NOT NULL,
+                    nome_om TEXT NOT NULL,
+                    distrito TEXT,
+                    uf TEXT
+                )
+            """,
+            "auditorias": """
+                CREATE TABLE IF NOT EXISTS auditorias (
+                    id_auditoria INTEGER PRIMARY KEY AUTOINCREMENT,
+                    cod_siafi INTEGER NOT NULL,
+                    ano_auditoria INTEGER NOT NULL,
+                    FOREIGN KEY (cod_siafi) REFERENCES organizacoes_militares(cod_siafi)
+                )
+            """,
+            "criterio_execucao_licitacao": """
+                CREATE TABLE IF NOT EXISTS criterio_execucao_licitacao (
+                    id_execucao INTEGER PRIMARY KEY AUTOINCREMENT,
+                    cod_siafi INTEGER NOT NULL,
+                    valor_convite REAL,
+                    valor_tomada_preco REAL,
+                    valor_concorrencia REAL,
+                    valor_dispensa REAL,
+                    valor_inexigibilidade REAL,
+                    valor_nao_se_aplica REAL,
+                    valor_suprimento_fundos REAL,
+                    valor_regime_diferenciado REAL,
+                    valor_cons REAL,
+                    valor_pregao_eletronico REAL,
+                    valor_credenciamento REAL,
+                    FOREIGN KEY (cod_siafi) REFERENCES organizacoes_militares(cod_siafi)
+                )
+            """,
+            "criterio_pagamento": """
+                CREATE TABLE IF NOT EXISTS criterio_pagamento (
+                    id_pagamento INTEGER PRIMARY KEY AUTOINCREMENT,
+                    cod_siafi INTEGER NOT NULL,
+                    folha_de_pagamento_total REAL,
+                    FOREIGN KEY (cod_siafi) REFERENCES organizacoes_militares(cod_siafi)
+                )
+            """,
+            "criterio_munic": """
+                CREATE TABLE IF NOT EXISTS criterio_munic (
+                    id_munic INTEGER PRIMARY KEY AUTOINCREMENT,
+                    cod_siafi INTEGER NOT NULL,
+                    uasg TEXT,
+                    codigo_om TEXT NOT NULL,
+                    sigla_om TEXT,
+                    nome_om TEXT,
+                    despesa_autorizada REAL,
+                    quantidade_de_notas INTEGER,
+                    uf TEXT,
+                    area_om TEXT,
+                    ultima_auditoria TEXT,
+                    FOREIGN KEY (cod_siafi) REFERENCES organizacoes_militares(cod_siafi)
+                )
+            """,
+            "criterio_patrimonio": """
+                CREATE TABLE IF NOT EXISTS criterio_patrimonio (
+                    id_patrimonio INTEGER PRIMARY KEY AUTOINCREMENT,
+                    cod_siafi INTEGER NOT NULL,
+                    total_geral_bens_moveis REAL,
+                    importacoes_em_andamento_bens_moveis REAL,
+                    total_geral_bens_imoveis REAL,
+                    importacoes_em_andamento_bens_imoveis REAL,
+                    bens_imoveis_a_classificar REAL,
+                    FOREIGN KEY (cod_siafi) REFERENCES organizacoes_militares(cod_siafi)
+                )
+            """
+        }
 
-    def insert_or_update_data(self, data):
-        print("Dados recebidos para salvar:", data)
-
-        # Define 'Planejamento' como valor padrão para status se estiver vazio ou None
-        data['status'] = data.get('status', 'Planejamento')
-        if not data['status']:  # Se for string vazia, define 'Planejamento'
-            data['status'] = 'Planejamento'
-            
-        upsert_sql = '''
-        INSERT INTO ccimar11_db (
-            status, dias, prorrogavel, custeio, numero_contrato, 
-            tipo, id, nome_fornecedor, objeto, valor_global, 
-            codigo_uasg, processo_nup, cnpj_cpf_idgener, natureza_continuada, orgao_contratante_resumido, 
-            orgao_contratante, material_servico, link_pncp, vigencia_inicial, vigencia_final, 
-            termo_aditivo, atualizacao_comprasnet, instancia_governanca, comprasnet_contratos, licitacao_numero, 
-            data_assinatura, data_publicacao, categoria, subtipo, amparo_legal, 
-            modalidade, assinatura_contrato, situacao
-        ) VALUES (
-            ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, 
-            ?, ?, ?, ?, ?, 
-            ?, ?, ?)
-        ON CONFLICT(id) DO UPDATE SET
-                status=excluded.status, dias=excluded.dias, prorrogavel=excluded.prorrogavel, custeio=excluded.custeio, numero_contrato=excluded.numero_contrato,
-                tipo=excluded.tipo, nome_fornecedor=excluded.nome_fornecedor, objeto=excluded.objeto, valor_global=excluded.valor_global,    
-                codigo_uasg=excluded.codigo_uasg, processo_nup=excluded.processo_nup, cnpj_cpf_idgener=excluded.cnpj_cpf_idgener, natureza_continuada=excluded.natureza_continuada,
-                orgao_contratante_resumido=excluded.orgao_contratante_resumido, orgao_contratante=excluded.orgao_contratante, material_servico=excluded.material_servico, link_pncp=excluded.link_pncp,
-                vigencia_inicial=excluded.vigencia_inicial, vigencia_final=excluded.vigencia_final, termo_aditivo=excluded.termo_aditivo, atualizacao_comprasnet=excluded.atualizacao_comprasnet,
-                instancia_governanca=excluded.instancia_governanca, comprasnet_contratos=excluded.comprasnet_contratos, licitacao_numero=excluded.licitacao_numero, data_assinatura=excluded.data_assinatura,
-                data_publicacao=excluded.data_publicacao, categoria=excluded.categoria, subtipo=excluded.subtipo, amparo_legal=excluded.amparo_legal, 
-                modalidade=excluded.modalidade, assinatura_contrato=excluded.assinatura_contrato, situacao=excluded.situacao
-        '''
-
-        # Verifica se 'situacao' está dentro dos valores válidos
-        valid_situations = ["Planejamento", "Aprovado", "Sessão Pública", "Homologado", "Empenhado", "Concluído", "Arquivado"]
-        data['situacao'] = data.get('situacao', 'Planejamento')
-        if data['situacao'] not in valid_situations:
-            data['situacao'] = 'Planejamento'
-
-        # Executa a inserção ou atualização
-        try:
-            with self.database_manager as conn:
-                cursor = conn.cursor()
-                cursor.execute(upsert_sql, (
-                    data.get('status'), data.get('dias'), data.get('prorrogavel'), data.get('custeio'), data.get('numero_contrato'),
-                    data.get('tipo'), data.get('id'), data.get('nome_fornecedor'), data.get('objeto'), data.get('valor_global'),
-                    data.get('codigo_uasg'), data.get('processo_nup'), data.get('cnpj_cpf_idgener'), data.get('natureza_continuada'), data.get('orgao_contratante_resumido'),
-                    data.get('orgao_contratante'), data.get('material_servico'), data.get('link_pncp'), data.get('vigencia_inicial'), data.get('vigencia_final'),
-                    data.get('termo_aditivo'), data.get('atualizacao_comprasnet'), data.get('instancia_governanca'), data.get('comprasnet_contratos'), data.get('licitacao_numero'),
-                    data.get('data_assinatura'), data.get('data_publicacao'), data.get('categoria'), data.get('subtipo'), data.get('amparo_legal'),
-                    data.get('modalidade'), data.get('assinatura_contrato'), data.get('situacao')
-                    )) 
-                conn.commit()
-
-        except sqlite3.OperationalError as e:
-            if "no such table" in str(e):
-                QMessageBox.warning(None, "Erro", "A tabela 'ccimar11_db' não existe. Por favor, crie a tabela primeiro.")
-                return
+        for nome_tabela, sql_criacao in tabelas.items():
+            if not query.exec(sql_criacao):
+                print(f"Erro ao criar/verificar a tabela '{nome_tabela}':", query.lastError().text())
             else:
-                QMessageBox.warning(None, "Erro", f"Ocorreu um erro ao tentar salvar os dados: {str(e)}")
+                print(f"Tabela '{nome_tabela}' criada/verificada com sucesso.")
+
+    def insert_munic(self, cod_siafi, uasg, codigo_om, sigla_om, nome_om, despesa_autorizada, quantidade_de_notas, uf, area_om, ultima_auditoria):
+        insert_munic(self.db, cod_siafi, uasg, codigo_om, sigla_om, nome_om, despesa_autorizada, quantidade_de_notas, uf, area_om, ultima_auditoria)
+
+    def insert_organizacao_militar(self, df):
+        insert_organizacao_militar(self.database_manager, df)
+
+    def insert_auditoria(self, cod_siafi, ano_auditoria):
+        insert_auditoria(self.db, cod_siafi, ano_auditoria)
+
+    def insert_execucao_licitacao(self, df):
+        insert_execucao_licitacao(self.database_manager, df)
+    
+    def insert_pagamento(self, df):
+        insert_pagamento(self.database_manager, df)
+
+    def insert_patrimonio(self, df):
+        insert_patrimonio(self.database_manager, df)
+
+    def get_auditoria_statistics(self):
+        """Obtém estatísticas das auditorias realizadas."""
+        query = QSqlQuery(self.db)
+        sql = """
+        SELECT 
+            om.cod_siafi,
+            om.nome_om,
+            COUNT(a.id_auditoria) AS total_auditorias,
+            MAX(a.ano_auditoria) AS ultima_auditoria,
+            (strftime('%Y', 'now') - MAX(a.ano_auditoria)) AS anos_desde_ultima
+        FROM organizacoes_militares om
+        LEFT JOIN auditorias a ON om.id_om = a.id_om
+        GROUP BY om.id_om
+        ORDER BY anos_desde_ultima DESC
+        """
+        query.prepare(sql)
+
+        if not query.exec():
+            print("Erro ao obter estatísticas de auditorias:", query.lastError().text())
+            return []
+
+        resultados = []
+        while query.next():
+            resultados.append({
+                "cod_siafi": query.value(0),
+                "nome_om": query.value(1),
+                "total_auditorias": query.value(2),
+                "ultima_auditoria": query.value(3),
+                "anos_desde_ultima": query.value(4)
+            })
+
+        return resultados
 
 class CustomSqlTableModel(QSqlTableModel):
     def __init__(self, parent=None, db=None, database_manager=None, non_editable_columns=None):
@@ -146,13 +187,7 @@ class CustomSqlTableModel(QSqlTableModel):
         
         # Define os nomes das colunas
         self.column_names = [
-            "status", "dias", "prorrogavel", "custeio", "numero_contrato",
-            "tipo", "id", "nome_fornecedor", "objeto", "valor_global",
-            "codigo_uasg", "processo_nup", "cnpj_cpf_idgener", "natureza_continuada", "orgao_contratante_resumido",
-            "orgao_contratante", "material_servico", "link_pncp", "vigencia_inicial", "vigencia_final",
-            "termo_aditivo", "atualizacao_comprasnet", "instancia_governanca", "comprasnet_contratos", "licitacao_numero",
-            "data_assinatura", "data_publicacao", "categoria", "subtipo", "amparo_legal",
-            "modalidade", "assinatura_contrato", "situacao"                
+            "uasg", "descricao_om"            
         ]
 
     def flags(self, index):

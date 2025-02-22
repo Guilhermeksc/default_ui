@@ -55,6 +55,8 @@ def load_icons():
         "data-processing_blue": load_icon("data-processing_blue.png"),        
         "initreport": load_icon("initreport.png"),   
         "click": load_icon("click.png"),   
+        "analytics": load_icon("analytics.png"),   
+        "report": load_icon("report.png"),   
 
         "doc": load_icon("doc.png"),
         "mail": load_icon("mail.png"),

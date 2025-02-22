@@ -1,13 +1,9 @@
 # src/modules/ccimar11_planejamento/menu/menu_callbacks.py
 
 from PyQt6.QtWidgets import QLabel, QFrame, QVBoxLayout
-from .content.criterio1_execucao_licitacao import create_criterio1_execucao_licitacao
-from .content.criterio2_pagamento import create_criterio2_pagamento
-from .content.criterio3_municiamento import create_criterio3_municiamento
-from .content.criterio4_patrimonio import create_criterio4_patrimonio
-from .content.criterio5_periodo_sem_auditoria import create_criterio5_anos_sem_audit
-from .content.criterio6_em_foco_externo import create_criterio6_foco_externo
-from .content.criteriox_omps import create_x
+from .content.nota_auditoria_teste1 import create_content_nota_auditoria_test1
+from .content.nota_auditoria_teste2 import create_content_nota_auditoria_test2
+from .content.nota_auditoria_teste3 import create_content_nota_auditoria_test3
 
 def create_content(title_text):
     """Creates a content layout inside a styled QFrame."""
@@ -24,33 +20,17 @@ def create_content(title_text):
 
     return content_frame
 
-def show_criterio1_execucao_licitacao(view):
+def show_nota_auditoria_teste1(view):
     view.clear_content()
-    view.content_layout.addWidget(create_criterio1_execucao_licitacao("Critério 1 - Execução Financeira", view.database_model))
+    view.content_layout.addWidget(create_content_nota_auditoria_test1("Nota de Auditoria Teste 1"))
 
-def show_criterio2_pagamento(view):
+def show_nota_auditoria_teste2(view):
     view.clear_content()
-    view.content_layout.addWidget(create_criterio2_pagamento("Critério 2 - Pagamento", view.database_model))
+    view.content_layout.addWidget(create_content_nota_auditoria_test2("Nota de Auditoria Teste 2"))
     
-def show_criterio3_munic(view):
+def show_nota_auditoria_teste3(view):
     view.clear_content()
-    view.content_layout.addWidget(create_criterio3_municiamento("Critério 3 - Municiamento"))
-
-def show_criterio4_patrimonio(view):
-    view.clear_content()
-    view.content_layout.addWidget(create_criterio4_patrimonio("Critério 4 - Patrimônio", view.database_model))
-
-def show_criterio5_anos_sem_audit(view):
-    view.clear_content()
-    view.content_layout.addWidget(create_criterio5_anos_sem_audit("Critério 5 - Anos sem Auditoria"))
-
-def show_criterio6_foco_externo(view):
-    view.clear_content()
-    view.content_layout.addWidget(create_criterio6_foco_externo("Critério 6 - Em Foco Externo"))
-
-def show_criteriox_omps(view):
-    view.clear_content()
-    view.content_layout.addWidget(create_x("Organizações", view.database_model))
+    view.content_layout.addWidget(create_content_nota_auditoria_test3("Nota de Auditoria Teste 3"))
 
 def show_oficio_ccimar20_widget(view):
     view.clear_content()
